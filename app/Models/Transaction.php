@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use App\Models\Category\Category;
-use App\Models\Entity\Entity;
+use App\Models\Category;
+use App\Models\Entity;
 use App\Models\Account;
 class Transaction extends Model
 {

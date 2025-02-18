@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Admin;
 
 class AuthController extends Controller
 {
@@ -45,12 +46,25 @@ class AuthController extends Controller
         return $this->respondWithToken($token, 'user');
     }
 
+    public function userProfile()
+    {
+        $user = User::all();
+        return response()->json($user);
+    }
+
+    public function adminProfile()
+    {
+        $admin = Admin::all();
+        return response()->json($admin);
+    }
+
     // Logout
     public function logout()
     {
         auth()->logout();
         return response()->json(['message' => 'Successfully logged out']);
     }
+
 
     // Resposta padrão com token
     protected function respondWithToken($token, $guard)

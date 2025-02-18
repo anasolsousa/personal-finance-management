@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid("id")->primary();
             $table->string("name");
             $table->string("type"); // tipo de conta se é para credito ou conta corrente por exmplo
+            $table->decimal("amount", 10, 2);
             
             $table->uuid("user_id"); // table externa
             $table->foreign('user_id')->references('id')->on('users');
