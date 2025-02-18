@@ -21,24 +21,6 @@ class TransactionController extends Controller
         return response()->json($transaction);
     }
 
-    public function income()
-    {
-        $income = Transaction::where('type', 'income')
-        ->orderBy('created_at', 'desc')
-        ->get();
-        
-        return response()->json($income);
-    }
-
-    public function expense()
-    {
-        $expense = Transaction::where('type', 'expense')
-        ->orderBy('created_at', 'desc')
-        ->get();
-
-        return response()->json($expense);
-    }
-
     public function store(StoreTransactionRequest $request)
     {
         $validated = $request->validated();

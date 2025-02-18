@@ -12,17 +12,27 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transfers', function (Blueprint $table) {
-            $table->uuid("id")->primary();
-            $table->datetime("date");
-            $table->text("notes")->nullable(); 
-            $table->decimal("amount", 10, 2);
-            $table->enum('type', ['account_transfer', 'saving', 'investment']);
+            $table->uuid('id')->primary();
+            $table->date('date');
+            $table->text('notes')->nullable();
+            $table->decimal('amount', 10, 2);
+            $table->string('type'); // account_transfer, saving, investment
 
-            $table->uuid("account_from_id");
+            $table->uuid('account_from_id')->nullable(); // Conta de origem
             $table->foreign('account_from_id')->references('id')->on('accounts');
 
+            $table->uuid('account_to_id')->nullable(); // Para transferências entre contas
+            $table->foreign('account_to_id')->references('id')->on('accounts');
+
+            $table->uuid('entity_id')->nullable(); // Para savings/investments
+            $table->uuid('category_id')->nullable(); // Categoria de savings/investments
+            $table->decimal('initial_amount', 10, 2)->nullable(); // Para investimentos
+            $table->decimal('final_amount', 10, 2)->nullable(); // Para investimentos
+            $table->decimal('reinforcement', 10, 2)->nullable(); // Para savings/investments
+            $table->date('end_date')->nullable(); // Para savings
             $table->timestamps();
         });
+        
     }
 
     /**

@@ -60,11 +60,7 @@ Route::group(['prefix' => 'auth'], function () {
         // Transações - entrada e saida de dinheiro
         Route::get('/transaction', [TransactionController::class, 'index']); // lista transações
         Route::post('/transaction', [TransactionController::class, 'store']); // criar transação 
-        Route::get('/transaction/income', [TransactionController::class, 'income']); // ver uma determinada transação categorias 
-        Route::get('/transaction/expense', [TransactionController::class, 'expense']); // ver uma determinada transação categorias 
-
-
-
+    
         Route::patch('/transaction', [TransactionController::class, 'show']); // ver uma determinada transação categorias 
         Route::patch('/transaction/{id}', [TransactionController::class, 'update']); // atualizar transação
         Route::delete('/transaction/{id}', [TransactionController::class, 'destroy']); // eliminar transação

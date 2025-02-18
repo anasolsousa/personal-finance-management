@@ -11,33 +11,48 @@ class Transfer extends Model
 {
     use HasFactory;
     use HasUuids;
-    
+
     protected $fillable = [
         'date',
         'notes',
         'amount',
         'type',
         'account_from_id',
+        'account_to_id',
+        'entity_id',
+        'category_id',
+        'initial_amount',
+        'final_amount',
+        'reinforcement',
+        'end_date',
     ];
 
-     public static function Types()
-     {
-         return [
-             'account_transfer',
-             'saving',
-             'investment',
-         ];
-     }
+    public static function Types()
+    {
+        return [
+            'account_transfer',
+            'saving',
+            'investment',
+        ];
+    }
 
-     public function accountFrom(){
-         return $this->belongsTo(Account::class, 'account_from_id');
-     }
- 
-     public function accountTo(){
-         return $this->belongsTo(Account::class, 'account_to_id');
-     }
- 
-     public function investments(){
-         return $this->hasMany(Investment::class);
-     }
+    public function accountFrom()
+    {
+        return $this->belongsTo(Account::class, 'account_from_id');
+    }
+
+    public function accountTo()
+    {
+        return $this->belongsTo(Account::class, 'account_to_id');
+    }
+
+    public function entity()
+    {
+        return $this->belongsTo(Entity::class, 'entity_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 }
