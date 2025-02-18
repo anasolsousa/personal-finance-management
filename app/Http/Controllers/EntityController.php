@@ -65,7 +65,7 @@ class EntityController extends Controller
    
            if(!$entity){
                return response()->json([
-                   'messege' => 'Entidade não foi encontrada'
+                   'message' => 'Entidade não foi encontrada'
                ], 400);
            }
    
@@ -94,7 +94,7 @@ class EntityController extends Controller
            $subEntity->save();
    
            return response()->json([
-               'messege' => 'Sub-entidade criada com sucesso',
+               'message' => 'Sub-entidade criada com sucesso',
                'Entity' => $subEntity
            ], 201);
        }
@@ -134,7 +134,7 @@ class EntityController extends Controller
    
            if(!$subEntity){
                return response()->json([
-                   'messege' => 'Entidade não foi encontrada'
+                   'message' => 'Entidade não foi encontrada'
                ], 400);
            }
    

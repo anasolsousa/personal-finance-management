@@ -67,14 +67,14 @@ class AccountController extends Controller
 
         if(!$account){
             return response()->json([
-                'messege' => 'Conta não foi encontrada'
+                'message' => 'Conta não foi encontrada'
             ],400);
         }
 
         $account->delete();
 
         return response()->json([
-            'messege' => 'Conta eliminada com sucesso'
+            'message' => 'Conta eliminada com sucesso'
         ],200);
     }
 }
