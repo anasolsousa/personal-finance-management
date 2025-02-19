@@ -24,8 +24,18 @@ return new class extends Migration
             $table->uuid('account_to_id')->nullable(); // Para transferências entre contas
             $table->foreign('account_to_id')->references('id')->on('accounts');
 
-            $table->uuid('entity_id')->nullable(); // Para savings/investments
-            $table->uuid('category_id')->nullable(); // Categoria de savings/investments
+            $table->uuid("entity_id"); 
+            $table->foreign('entity_id')->references('id')->on('entities');
+
+            $table->uuid("sub_entity_id"); 
+            $table->foreign('sub_entity_id')->references('id')->on('sub_entities');
+
+            $table->uuid("category_id"); 
+            $table->foreign('category_id')->references('id')->on('categories');
+
+            $table->uuid("sub_category_id"); 
+            $table->foreign('sub_category_id')->references('id')->on('sub_categories');
+
             $table->decimal('initial_amount', 10, 2)->nullable(); // Para investimentos
             $table->decimal('final_amount', 10, 2)->nullable(); // Para investimentos
             $table->decimal('reinforcement', 10, 2)->nullable(); // Para savings/investments

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Account;
 use Illuminate\Support\Facades\DB; 
-use App\Http\Requests\StoreTransactionRequest;
+use App\Http\Requests\TransactionRequest;
 
 class TransactionController extends Controller
 {
@@ -21,7 +21,7 @@ class TransactionController extends Controller
         return response()->json($transaction);
     }
 
-    public function store(StoreTransactionRequest $request)
+    public function store(TransactionRequest $request)
     {
         $validated = $request->validated();
         $transaction = Transaction::create($validated);
@@ -30,7 +30,7 @@ class TransactionController extends Controller
 
         if($transaction->type === 'expense' && $account->amount <= 0){
             return response()->json([
-                'message' => 'Não é possivel realizar esta operacao pois o saldo da conta é 0'
+               'message' => 'Operação não permitida: o saldo da conta é insuficiente (0).'
             ],400);
         }
 
@@ -69,7 +69,7 @@ class TransactionController extends Controller
         return response()->json($transaction);
     }
 
-    public function update(StoreTransactionRequest $request, string $id)
+    public function update(TransactionRequest $request, string $id)
     {
         $transaction = Transaction::find($id);
 
@@ -86,8 +86,14 @@ class TransactionController extends Controller
 
         if($transaction->type === 'expense' && $account->amount <= 0){
             return response()->json([
-                'message' => 'Não é possivel realizar esta operacao pois o saldo da conta é 0'
+              'message' => 'Operação não permitida: o saldo da conta é insuficiente (0).'
             ],400);
+        }
+
+        if($transaction->type === 'expense' && $transaction->amount > $account->amount){
+            return response()->json([
+                'message' => 'Operação não permitida: o saldo da conta é insuficiente.'
+              ],400);
         }
 
         DB::transaction(function() use ($transaction, $account){

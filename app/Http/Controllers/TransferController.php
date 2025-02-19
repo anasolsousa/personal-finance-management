@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transfer;
-use App\Http\Requests\StoreTransfernRequest;
+use App\Http\Requests\TransfernRequest;
 
 class TransferController extends Controller
 {
@@ -15,14 +15,25 @@ class TransferController extends Controller
         return response()->json($allTransfers);
     }
 
-    public function store(StoreTransfernRequest $request)
+    public function store(TransfernRequest $request)
     {
         $validated = $request->validated();
         $transfer = Transfer::create($validated);
 
-       
         $accountFrom = Account::find($transfer->account_from_id);
-        
+
+        if($accountFrom->amount <= 0){
+            return response()->json([
+                'message' => 'Não é possível realizar a operação, saldo insuficiente.'
+            ],400);
+        }
+
+        if($transfer->amount > $accountFrom->amount){
+            return response()->json([
+                'message' => 'Operação não permitida: o saldo da conta é insuficiente.'
+              ],400);
+        }
+
         switch($transfer->type) {
             case 'account_transfer':
                 $accountTo = Account::find($transfer->account_to_id);
@@ -49,14 +60,9 @@ class TransferController extends Controller
                 $accountFrom->initial_amount = $transfer->amount;
                 $accountFrom->save();
                 break;
-        } 
-        
-
-        if($account->amount <= 0 && $transfer->amount < $account->amount){
-            return response()->json([
-                'message' => 'Não é possível realizar a operação, saldo insuficiente.'
-            ],400);
         }
+
+        $accountFrom->save();
 
         return response()->json([
             'message' => 'Transferencia realizada com sucesso',
@@ -64,25 +70,68 @@ class TransferController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(TransfernRequest $request, string $id)
     {
-        //
+        $transfer = Transfer::find($id);
+
+        $validated = $request->validated();
+
+        if (!$transfer) {
+            return response()->json([
+                'message' => 'Transferência não encontrada.'
+            ], 404);
+        }
+
+        $transfer->update($validated);
+
+        if($accountFrom->amount <= 0){
+            return response()->json([
+                'message' => 'Não é possível realizar a operação, saldo insuficiente.'
+            ],400);
+        }
+
+        if($transfer->amount > $accountFrom->amount){
+            return response()->json([
+                'message' => 'Operação não permitida: o saldo da conta é insuficiente.'
+              ],400);
+        }
+
+        switch($transfer->type) {
+            case 'account_transfer':
+                $accountTo = Account::find($transfer->account_to_id);
+
+                $accountTo->amount += $transfer->amount;
+                $accountFrom->amount -= $transfer->amount;;
+                
+                $accountTo->save();
+                $accountFrom->save();
+                break;
+
+            case 'saving':
+                $accountTo = Account::find($transfer->account_to_id);
+
+                $accountTo->amount += $transfer->amount;
+                $accountFrom->amount -= $transfer->amount;;
+                
+                $accountTo->save();
+                $accountFrom->save();
+                break;
+            
+            case 'investment':
+                $accountFrom->amount -= $transfer->amount;
+                $accountFrom->initial_amount = $transfer->amount;
+                $accountFrom->save();
+                break;
+        }
+
+        $accountFrom->save();
+
+        return response()->json([
+            'message' => 'Transferencia realizada com sucesso',
+            'Transferencia' => $transfer 
+        ], 201);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //
