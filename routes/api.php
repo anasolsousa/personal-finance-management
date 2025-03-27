@@ -7,6 +7,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\TransferController;
+use App\Http\Controllers\ReinforceController;
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('admin/login', [AuthController::class, 'loginAdmin']);
@@ -65,6 +67,13 @@ Route::group(['prefix' => 'auth'], function () {
         Route::patch('/transaction/{id}', [TransactionController::class, 'update']); // atualizar transação
         Route::delete('/transaction/{id}', [TransactionController::class, 'destroy']); // eliminar transação
 
+        // Transfer
+        Route::get('/transfer', [TransferController::class, 'index']); // lista transações
+        Route::post('/transfer', [TransferController::class, 'store']); // criar transação 
+        Route::patch('/transfer/{id}', [TransferController::class, 'update']); // atualizar transação
+        Route::delete('/transfer/{id}', [TransferController::class, 'destroy']); // eliminar transação
+
+        Route::patch('/reinforce/{id}', [ReinforceController::class, 'reinforce']); // reforçar transação
     });
 });
 

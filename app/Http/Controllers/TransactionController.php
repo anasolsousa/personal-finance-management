@@ -71,47 +71,53 @@ class TransactionController extends Controller
 
     public function update(TransactionRequest $request, string $id)
     {
-        $transaction = Transaction::find($id);
+        return DB::transaction(function() use ($request, $id) {
+            $transaction = Transaction::find($id);
+        
+            $account = Account::find($transaction->account_id);
 
-        $validated = $request->validated();
-        $transaction = Transaction::create($validated);
-      
-        $account = Account::find($transaction->account_id);
+            if(!$transaction){
+                return response()->json([
+                    'message' => 'Transação não foi encontrada',
+                ], 404);
+            }
+            
+            // devolver o dinheiro para conta de origem antes de aplicar outra ação
+            if($transaction->type === 'income'){
+                $account->amount -= $transaction->amount;
+            } else {
+                $account->amount += $transaction->amount;
+            }
 
-        if(!$transaction){
-            return response()->json([
-                'message' => 'Transação não foi encontrada',
-            ], 404);
-        }
+            $validated = $request->validated();
+            $newAmount = $validated['amount'];
 
-        if($transaction->type === 'expense' && $account->amount <= 0){
-            return response()->json([
-              'message' => 'Operação não permitida: o saldo da conta é insuficiente (0).'
-            ],400);
-        }
+            if($transaction->type === 'expense' && $account->amount <= 0){
+                return response()->json([
+                'message' => 'Operação não permitida: o saldo da conta é insuficiente (0).'
+                ],400);
+            }
 
-        if($transaction->type === 'expense' && $transaction->amount > $account->amount){
-            return response()->json([
-                'message' => 'Operação não permitida: o saldo da conta é insuficiente.'
-              ],400);
-        }
-
-        DB::transaction(function() use ($transaction, $account){
+            if($transaction->type === 'expense' && $transaction->amount > $account->amount){
+                return response()->json([
+                    'message' => 'Operação não permitida: o saldo da conta é insuficiente.'
+                ],400);
+            }
 
             if($transaction->type === 'income'){
-                $account->amount += $transaction->amount;
+                $account->amount += $newAmount;
             } else {
-                $account->amount -= $transaction->amount;
+                $account->amount -= $newAmount;
             }
+
             $account->save();
+            $transaction->update($validated);
+
+            return response()->json([
+                'message' => 'Transação atualizado com sucesso',
+                'Transaction' => $transaction,
+            ], 200);
         });
-
-        $transaction->update($validated);
-
-        return response()->json([
-            'message' => 'Transação atualizado com sucesso',
-            'Transaction' => $transaction
-        ], 200);
     }
 
     public function destroy(string $id)

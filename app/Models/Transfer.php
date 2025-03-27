@@ -18,10 +18,12 @@ class Transfer extends Model
         'amount',
         'type',
         'account_from_id',
+
         'entity_id',
         'sub_entity_id',
         'category_id',
         'sub_category_id',
+        
         'account_to_id',
         'initial_amount',
         'final_amount',

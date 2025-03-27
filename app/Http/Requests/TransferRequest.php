@@ -17,25 +17,26 @@ class TransferRequest extends FormRequest
         $type = $this->input('type');
 
         $specificRules = match($type) {
-            'account_transfer' => [
-                'account_to_id' => 'required|exists:accounts,id'
-            ],
+            'account_transfer',
             'saving' => [
-                'reinforcement' => 'required|numeric|min:0.01', 
-                'end_date' => 'required|date',
+                'account_to_id' => 'required|exists:accounts,id',
+                'reinforcement' => 'nullable|numeric|min:0.01', 
+                'end_date' => 'date',
                 'entity_id' => 'required|exists:entities,id',
                 'sub_entity_id' => 'nullable|exists:sub_entities,id',
                 'category_id' => 'required|exists:categories,id',
                 'sub_category_id' => 'nullable|exists:sub_categories,id',
             ],
             'investment' => [
-                'initial_amount' => 'required|numeric|min:0.01', 
+                'account_to_id' => 'required|exists:accounts,id',
+                'initial_amount' => 'numeric|min:0.01', 
                 'final_amount'=> 'required|numeric|min:0.01',  
-                'reinforcement'=> 'required|numeric|min:0.01',
+                'reinforcement'=> 'numeric|min:0.01',
+                'end_date' => 'date',
                 'entity_id' => 'required|exists:entities,id',
                 'sub_entity_id' => 'nullable|exists:sub_entities,id',
                 'category_id' => 'required|exists:categories,id',
-                'sub_category_id' => 'nullable|exists:sub_categories,id',
+                'sub_category_id' => 'nullable|exists:sub_categories,id'
             ],
             default => []
         };
@@ -45,7 +46,6 @@ class TransferRequest extends FormRequest
             'notes' => 'nullable|string|max:255',
             'amount' => 'required|numeric|min:0.01',
             'type' => 'required|in:account_transfer,saving,investment',
-
             'account_from_id'=> 'required|exists:accounts,id',
         ];
 
