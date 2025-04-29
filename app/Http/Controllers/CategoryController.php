@@ -71,7 +71,7 @@ class CategoryController extends Controller
     // SUBCATEGORY
     public function subCategory()
     {
-        $subCategory = SubCategory::all();
+        $subCategory = SubCategory::with('category')->get();
         return response()->json($subCategory);
     }
 

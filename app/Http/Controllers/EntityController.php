@@ -80,7 +80,7 @@ class EntityController extends Controller
    
        public function indexSubEntity() 
        {
-           $subEntity = SubEntity::all();
+           $subEntity = SubEntity::with('entity')->get(); // para aparecer o icon no front falatava esta parte
            return response()->json($subEntity);
        }
    

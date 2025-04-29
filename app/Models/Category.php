@@ -19,16 +19,8 @@ class Category extends Model
         'icon',
     ];
 
-    // public function transactions(){
-    //     return $this->hasMany(Transaction::class);
-    // }
-
-    // public function investments(){
-    //     return $this->hasMany(Investment::class);
-    // }
-
     // Uma categoria pode ter várias subcategorias
     public function subCategories(){
-        return $this->hasMany(SubCategory::class, 'categoria_id');
+        return $this->hasMany(SubCategory::class, 'category_id');
     }
 }
