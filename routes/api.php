@@ -49,8 +49,13 @@ Route::group(['prefix' => 'auth'], function () {
         Route::post('user/logout', [AuthController::class, 'logout']);
         // Outras rotas protegidas para users
 
-        Route::get('/category', [CategoryController::class, 'categoryAndSubCategory']); // lista categorias
-        Route::get('/entity', [EntityController::class, 'entityAndSubEntity']); // lista entidades
+        Route::get('/categories', [CategoryController::class, 'index']); 
+        Route::get('/subcategories', [CategoryController::class, 'subCategory']);
+        Route::get('/entities', [EntityController::class, 'index']); // lista entidades
+        Route::get('/subEntity', [EntityController::class, 'indexSubEntity']); // listagem entidades
+
+        // Route::get('/category', [CategoryController::class, 'categoryAndSubCategory']); // lista categorias
+        // Route::get('/entity', [EntityController::class, 'entityAndSubEntity']); // lista entidades
         Route::get('/userProfiles', [AuthController::class, 'userProfile']);
 
         // conta de MB

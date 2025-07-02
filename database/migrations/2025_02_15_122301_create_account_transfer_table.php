@@ -19,6 +19,9 @@ return new class extends Migration
     
             $table->uuid("transfer_id");
             $table->foreign('transfer_id')->references('id')->on('transfers');
+
+            $table->uuid("user_id"); // table externa
+            $table->foreign('user_id')->references('id')->on('users');
             
             $table->timestamps();
         });

@@ -11,7 +11,7 @@ class AccountController extends Controller
   
     public function index()
     {
-        $account = Account::all();
+        $account = Account::where('user_id', auth()->id())->get();
         return response()->json($account);
     }
 
@@ -34,8 +34,12 @@ class AccountController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $account = Account::find($id);
-
+        // procura pelo id da conta ('id'), e pelo id do user ('$id');
+        // serve para garantir que atualiza a conta com o id certo e no user certo
+        $account = Account::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+        
         if(!$account){
             return response()->json([
                 'message' => 'A Conta não foi encontrada'
@@ -63,7 +67,10 @@ class AccountController extends Controller
 
     public function destroy(string $id)
     {
-        $account = Account::where('id', $id);
+         // procura pelo id da conta ('id'), e pelo id do user ('$id');
+        $account = Account::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
 
         if(!$account){
             return response()->json([

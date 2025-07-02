@@ -20,19 +20,14 @@ class Investment extends Model
         'final_amount',
         'reinforcement',
         'transfer_id',
-        'entity_id',
-        'category_id',
+        'user_id',
     ];
-
-    public function category() {
-        return $this->belongsTo(Category::class);
-    }
-
-    public function entity(){
-        return $this->belongsTo(Entity::class);
-    }
 
     public function transfer(){
         return $this->belongsTo(Transfer::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }

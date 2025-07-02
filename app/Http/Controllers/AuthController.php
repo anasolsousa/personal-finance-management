@@ -66,13 +66,14 @@ class AuthController extends Controller
     }
 
 
-    // Resposta padrão com token
+    // Resposta padrão com token para aceder no frontend
     protected function respondWithToken($token, $guard)
     {
         return response()->json([
             'token' => $token, // nome do token para aceder
             'token_type' => 'bearer',
-            'expires_in' => auth($guard)->factory()->getTTL() * 60
+            'expires_in' => auth($guard)->factory()->getTTL() * 60,
+            'user' => auth()->user()
         ]);
     }
 }

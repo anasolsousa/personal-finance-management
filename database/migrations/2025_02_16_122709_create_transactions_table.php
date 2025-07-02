@@ -34,6 +34,9 @@ return new class extends Migration
             $table->uuid("sub_category_id"); 
             $table->foreign('sub_category_id')->references('id')->on('sub_categories');
 
+            $table->uuid("user_id"); // table externa
+            $table->foreign('user_id')->references('id')->on('users');
+
             $table->timestamps();
         });
     }

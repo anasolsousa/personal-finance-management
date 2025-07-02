@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use App\Models\Category;
 use App\Models\Entity;
 use App\Models\Account;
+
 class Transaction extends Model
 {
     use HasFactory;
     use HasUuids;
     
     protected $fillable = [
+        'user_id',
         'date',
         'notes',
         'amount',
@@ -52,5 +54,10 @@ class Transaction extends Model
 
     public function subCategory(){
         return $this->belongsTo(SubCategory::class, 'sub_category_id'); 
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

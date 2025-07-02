@@ -36,5 +36,41 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+     // Relação com Accounts (1 user tem muitas contas)
+    public function accounts()
+    {
+        return $this->hasMany(Account::class);
+    }
+
+    // Relação com Transfers (1 user tem muitas transfers)
+    public function transfers()
+    {
+        return $this->hasMany(Transfer::class);
+    }
+
+    // Relação com Transactions (1 user tem muitas transactions)
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    // Relação com Investments (1 user tem muitos investments)
+    public function investments()
+    {
+        return $this->hasMany(Investment::class);
+    }
+
+    // Relação com Savings (1 user tem muitos savings)
+    public function savings()
+    {
+        return $this->hasMany(Saving::class);
+    }
+
+    // Relação com AccountTransfers (1 user tem muitos account_transfers)
+    public function accountTransfers()
+    {
+        return $this->hasMany(AccountTransfer::class);
+    }
     
 }

@@ -23,4 +23,19 @@ class Account extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function transfersFrom()
+    {
+        return $this->hasMany(Transfer::class, 'account_from_id');
+    }
+
+    public function transfersTo()
+    {
+        return $this->hasMany(Transfer::class, 'account_to_id');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

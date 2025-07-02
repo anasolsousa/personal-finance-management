@@ -13,6 +13,7 @@ class Transfer extends Model
     use HasUuids;
 
     protected $fillable = [
+        'user_id',
         'date',
         'notes',
         'amount',
@@ -58,5 +59,20 @@ class Transfer extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function investment()
+    {
+        return $this->hasOne(Investment::class);
+    }
+
+    public function saving()
+    {
+        return $this->hasOne(Saving::class);
+    }
+
+    public function accountTransfer()
+    {
+        return $this->hasOne(AccountTransfer::class);
     }
 }

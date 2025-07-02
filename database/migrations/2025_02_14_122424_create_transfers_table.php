@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('transfers', function (Blueprint $table) {
             $table->uuid('id')->primary();
+
+            $table->uuid("user_id"); // table externa
+            $table->foreign('user_id')->references('id')->on('users');
+
             $table->date('date');
             $table->text('notes')->nullable();
             $table->decimal('amount', 10, 2);
@@ -41,6 +45,7 @@ return new class extends Migration
             $table->decimal('reinforcement', 10, 2)->nullable(); // Para savings/investments
             $table->date('end_date')->nullable(); // Para savings
             $table->timestamps();
+
         });
         
     }

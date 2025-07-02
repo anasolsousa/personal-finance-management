@@ -16,10 +16,11 @@ class Account_transfer extends Model
     protected $fillable = [
         'destination_account_id',
         'transfer_id',
+        'user_id',
     ];
 
-    public function transactionable(){
-        return $this->morphTo();
+    public function transfer(){
+        return $this->belongsTo(Transfer::class);
     }
     
     public function account_from(){
@@ -28,5 +29,9 @@ class Account_transfer extends Model
     
     public function account_to(){
         return $this->belongsTo(Account::class, 'id', 'account_to_id');
+    }
+    
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }

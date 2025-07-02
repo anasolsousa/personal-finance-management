@@ -16,7 +16,7 @@ class TransactionController extends Controller
     public function index()
     {
         $transaction = Transaction::with(['category', 'subCategory', 'entity', 'subEntity'])
-        ->get();
+            ->where('user_id', auth()->id())->get();
 
         return response()->json($transaction);
     }
@@ -24,6 +24,8 @@ class TransactionController extends Controller
     public function store(TransactionRequest $request)
     {
         $validated = $request->validated();
+        $validated['user_id'] = auth()->id();
+
         $transaction = Transaction::create($validated);
 
         $account = Account::find($transaction->account_id);
@@ -72,7 +74,9 @@ class TransactionController extends Controller
     public function update(TransactionRequest $request, string $id)
     {
         return DB::transaction(function() use ($request, $id) {
-            $transaction = Transaction::find($id);
+            $transaction = Transaction::where('id', $id)
+                ->where('user_id', auth()->id())
+                ->first();
         
             $account = Account::find($transaction->account_id);
 
@@ -122,7 +126,10 @@ class TransactionController extends Controller
 
     public function destroy(string $id)
     {
-        $transaction = Transaction::find($id);
+        $transaction = Transaction::where('id', $id)
+                ->where('user_id', auth()->id())
+                ->first();
+                
         $account = Account::find($transaction->account_id);
 
         if(!$transaction){
